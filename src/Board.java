@@ -10,7 +10,7 @@ public class Board {
     private Mark playerTurn;
     private Mark winner;
 
-    private HashSet<Integer> moveAvailable;
+    private final HashSet<Integer> moveAvailable;
 
     private int moveCnt;
     private boolean gameOver;
@@ -90,49 +90,42 @@ public class Board {
     private void checkRow(int x) {
         for (int i = 1; i < BOARD_WIDTH; i++) {
             if (board[x][i] != board[x][i - 1])
-                break;
-            if (i == BOARD_WIDTH - 1) {
-                winner = playerTurn;
-                gameOver = true;
-            }
+                return;
         }
-
+        winner = playerTurn;
+        gameOver = true;
     }
 
     private void checkColumn(int y) {
         for (int i = 1; i < BOARD_WIDTH; i++) {
             if (board[i][y] != board[i - 1][y])
-                break;
-            if (i == BOARD_WIDTH - 1) {
-                winner = playerTurn;
+                return;
+
+        }
+        winner = playerTurn;
+        gameOver = true;
+    }
+
+    private void checkDiagonalFromLeft(int x, int y) {
+        if(x==y) {
+            if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] == board[2][2]) {
                 gameOver = true;
+                winner = playerTurn;
             }
         }
     }
 
-    private void checkDiagonalFromLeft(int x, int y) {
-        if(x==y)
-        if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] == board[2][2]) {
-            gameOver = true;
-            winner = playerTurn;
-        }
-
-    }
-
     private void checkDiagonalFromRight(int x, int y) {
-        if(BOARD_WIDTH-x-1==y)
-        if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] == board[2][0]) {
-            gameOver = true;
-            winner = playerTurn;
+        if(BOARD_WIDTH-x-1==y) {
+            if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] == board[2][0]) {
+                gameOver = true;
+                winner = playerTurn;
+            }
         }
     }
 
     public boolean isGameOver() {
         return gameOver;
-    }
-
-    Mark[][] toArray() {
-        return board.clone();
     }
 
     public Mark getTurn() {
